@@ -4,7 +4,7 @@
 
 ## To do:
 
-### Near-future
+### 0.0.1
 
 - [#1](https://github.com/jonyboi396825/aversioner/issues/1) Better error messages
 - [#2](https://github.com/jonyboi396825/aversioner/issues/2) Add comments to exception messages ...
