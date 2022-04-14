@@ -123,11 +123,25 @@ def test_seq(first, res, seq):
 
 
 @pytest.mark.parametrize("num", [0, 22, 4, 66])
-def test_repr_str(num):
+def test_str(num):
     vnum = VersionNumber(num)
 
-    assert repr(vnum) == str(num)
     assert str(vnum) == str(num)
+
+
+@pytest.mark.parametrize(
+    "num, rep",
+    [
+        (0, "VersionNumber(number=0)"),
+        (22, "VersionNumber(number=22)"),
+        (4, "VersionNumber(number=4)"),
+        (66, "VersionNumber(number=66)"),
+    ],
+)
+def test_repr(num, rep):
+    vnum = VersionNumber(num)
+
+    assert repr(vnum) == rep
 
 
 @pytest.mark.parametrize("num", [0, 22, 4, 66])

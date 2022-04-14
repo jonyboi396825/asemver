@@ -55,67 +55,107 @@ class TestParse:
             p.string = bad
 
     @pytest.mark.parametrize(
-        "good, digit",
+        "good, digit, rep",
         [
-            ("prerelease", None),
-            ("alpha", None),
-            ("alpha.5", 5),
-            ("alpha.2.b.6.1.c", None),
-            ("beta", None),
-            ("beta.6", 6),
-            ("beta.c.s.d.a.b.c.3", 3),
-            ("alpha.beta.release-candidate.56", 56),
-            ("alpha0.valid", None),
-            ("alpha.0valid", None),
-            ("alpha-a.b-c-something-long", None),
-            ("rc.1", 1),
-            ("1.0.0", 0),
-            ("DEV-SNAPSHOT", None),
-            ("SNAPSHOT-123", None),
-            ("alpha.1227", 1227),
-            ("---RC-SNAPSHOT.12.9.1--.12", 12),
-            ("---R-S.12.9.1--.122", 122),
-            ("---RC-SNAPSHOT.12.9.1--.90", 90),
-            ("--RC--------1.0.0-0A.is.legal", None),
-            ("--RC--------1.0.0", 0),
+            ("prerelease", None, "Pre(string='prerelease')"),
+            ("alpha", None, "Pre(string='alpha')"),
+            ("alpha.5", 5, "Pre(string='alpha.5')"),
+            ("alpha.2.b.6.1.c", None, "Pre(string='alpha.2.b.6.1.c')"),
+            ("beta", None, "Pre(string='beta')"),
+            ("beta.6", 6, "Pre(string='beta.6')"),
+            ("beta.c.s.d.a.b.c.3", 3, "Pre(string='beta.c.s.d.a.b.c.3')"),
+            (
+                "alpha.beta.release-candidate.56",
+                56,
+                "Pre(string='alpha.beta.release-candidate.56')",
+            ),
+            ("alpha0.valid", None, "Pre(string='alpha0.valid')"),
+            ("alpha.0valid", None, "Pre(string='alpha.0valid')"),
+            (
+                "alpha-a.b-c-something-long",
+                None,
+                "Pre(string='alpha-a.b-c-something-long')",
+            ),
+            ("rc.1", 1, "Pre(string='rc.1')"),
+            ("1.0.0", 0, "Pre(string='1.0.0')"),
+            ("DEV-SNAPSHOT", None, "Pre(string='DEV-SNAPSHOT')"),
+            ("SNAPSHOT-123", None, "Pre(string='SNAPSHOT-123')"),
+            ("alpha.1227", 1227, "Pre(string='alpha.1227')"),
+            (
+                "---RC-SNAPSHOT.12.9.1--.12",
+                12,
+                "Pre(string='---RC-SNAPSHOT.12.9.1--.12')",
+            ),
+            ("---R-S.12.9.1--.122", 122, "Pre(string='---R-S.12.9.1--.122')"),
+            (
+                "---RC-SNAPSHOT.12.9.1--.90",
+                90,
+                "Pre(string='---RC-SNAPSHOT.12.9.1--.90')",
+            ),
+            (
+                "--RC--------1.0.0-0A.is.legal",
+                None,
+                "Pre(string='--RC--------1.0.0-0A.is.legal')",
+            ),
+            ("--RC--------1.0.0", 0, "Pre(string='--RC--------1.0.0')"),
         ],
     )
-    def test_good_parse_and_digit(self, good, digit):
+    def test_good_parse_and_digit(self, good, digit, rep):
         p = Pre(good)
 
         assert p.string == good
         assert p.digit == digit
 
-        assert repr(p) == good
+        assert repr(p) == rep
         assert str(p) == "-" + good
 
     @pytest.mark.parametrize(
-        "good, digit",
+        "good, digit, rep",
         [
-            ("prerelease", None),
-            ("alpha", None),
-            ("alpha.5", 5),
-            ("alpha.2.b.6.1.c", None),
-            ("beta", None),
-            ("beta.6", 6),
-            ("beta.c.s.d.a.b.c.3", 3),
-            ("alpha.beta.release-candidate.56", 56),
-            ("alpha0.valid", None),
-            ("alpha.0valid", None),
-            ("alpha-a.b-c-something-long", None),
-            ("rc.1", 1),
-            ("beta", None),
-            ("DEV-SNAPSHOT", None),
-            ("SNAPSHOT-123", None),
-            ("alpha.1227", 1227),
-            ("---RC-SNAPSHOT.12.9.1--.12", 12),
-            ("---R-S.12.9.1--.122", 122),
-            ("---RC-SNAPSHOT.12.9.1--.90", 90),
-            ("--RC--------1.0.0-0A.is.legal", None),
-            ("--RC--------1.0.0", 0),
+            ("prerelease", None, "Pre(string='prerelease')"),
+            ("alpha", None, "Pre(string='alpha')"),
+            ("alpha.5", 5, "Pre(string='alpha.5')"),
+            ("alpha.2.b.6.1.c", None, "Pre(string='alpha.2.b.6.1.c')"),
+            ("beta", None, "Pre(string='beta')"),
+            ("beta.6", 6, "Pre(string='beta.6')"),
+            ("beta.c.s.d.a.b.c.3", 3, "Pre(string='beta.c.s.d.a.b.c.3')"),
+            (
+                "alpha.beta.release-candidate.56",
+                56,
+                "Pre(string='alpha.beta.release-candidate.56')",
+            ),
+            ("alpha0.valid", None, "Pre(string='alpha0.valid')"),
+            ("alpha.0valid", None, "Pre(string='alpha.0valid')"),
+            (
+                "alpha-a.b-c-something-long",
+                None,
+                "Pre(string='alpha-a.b-c-something-long')",
+            ),
+            ("rc.1", 1, "Pre(string='rc.1')"),
+            ("1.0.0", 0, "Pre(string='1.0.0')"),
+            ("DEV-SNAPSHOT", None, "Pre(string='DEV-SNAPSHOT')"),
+            ("SNAPSHOT-123", None, "Pre(string='SNAPSHOT-123')"),
+            ("alpha.1227", 1227, "Pre(string='alpha.1227')"),
+            (
+                "---RC-SNAPSHOT.12.9.1--.12",
+                12,
+                "Pre(string='---RC-SNAPSHOT.12.9.1--.12')",
+            ),
+            ("---R-S.12.9.1--.122", 122, "Pre(string='---R-S.12.9.1--.122')"),
+            (
+                "---RC-SNAPSHOT.12.9.1--.90",
+                90,
+                "Pre(string='---RC-SNAPSHOT.12.9.1--.90')",
+            ),
+            (
+                "--RC--------1.0.0-0A.is.legal",
+                None,
+                "Pre(string='--RC--------1.0.0-0A.is.legal')",
+            ),
+            ("--RC--------1.0.0", 0, "Pre(string='--RC--------1.0.0')"),
         ],
     )
-    def test_setter(self, good, digit):
+    def test_setter(self, good, digit, rep):
         # tests setter
         p = Pre("-")
         p.string = good
@@ -123,8 +163,8 @@ class TestParse:
         assert p.string == good
         assert p.digit == digit
 
-        assert repr(p) == good
         assert str(p) == "-" + good
+        assert repr(p) == rep
 
 
 @pytest.mark.parametrize(

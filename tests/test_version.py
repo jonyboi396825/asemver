@@ -117,7 +117,7 @@ class TestConstructor:
 
 
 @pytest.mark.parametrize(
-    "args, rep",
+    "args, string",
     [
         ((1, 5, 2, "alpha.5", "meta-valid"), "1.5.2-alpha.5+meta-valid"),
         ((4, 23, 66, None, "1ac93c"), "4.23.66+1ac93c"),
@@ -125,11 +125,43 @@ class TestConstructor:
         ((4, 3, 6, "alpha.6", None), "4.3.6-alpha.6"),
     ],
 )
-def test_repr(args, rep):
+def test_str(args, string):
     v = Version(*args)
 
-    assert repr(v) == rep
-    assert str(v) == rep
+    assert str(v) == string
+
+
+@pytest.mark.parametrize(
+    "args, string",
+    [
+        (
+            (1, 5, 2, "alpha.5", "meta-valid"),
+            (
+                "Version(major=1, minor=5, patch=2, pre=Pre(string='alpha.5'), "
+                "build=Build(string='meta-valid'))"
+            ),
+        ),
+        (
+            (4, 23, 66, None, "1ac93c"),
+            (
+                "Version(major=4, minor=23, patch=66, pre=None, "
+                "build=Build(string='1ac93c'))"
+            ),
+        ),
+        (
+            (2, 5, 1, None, None),
+            "Version(major=2, minor=5, patch=1, pre=None, build=None)",
+        ),
+        (
+            (4, 3, 6, "alpha.6", None),
+            "Version(major=4, minor=3, patch=6, pre=Pre(string='alpha.6'), build=None)",
+        ),
+    ],
+)
+def test_repr(args, string):
+    v = Version(*args)
+
+    assert repr(v) == string
 
 
 class TestProperties:
@@ -522,20 +554,20 @@ class TestDec:
 def test_remove_pre():
     v = Version(2, 1, 5, pre="alpha.2.5", build="build")
     v.remove_pre()
-    assert repr(v) == "2.1.5+build"
+    assert str(v) == "2.1.5+build"
 
 
 def test_remove_build():
     v = Version(2, 1, 5, pre="alpha.2.5", build="build")
     v.remove_build()
-    assert repr(v) == "2.1.5-alpha.2.5"
+    assert str(v) == "2.1.5-alpha.2.5"
 
 
 def test_remove_pre_build():
     v = Version(2, 1, 5, pre="alpha.2.5", build="build")
     v.remove_build()
     v.remove_pre()
-    assert repr(v) == "2.1.5"
+    assert str(v) == "2.1.5"
 
 
 @pytest.mark.parametrize(
@@ -726,7 +758,7 @@ class TestAdd:
         ],
     )
     def test_valid_inc(self, orig, res, pos):
-        assert res == repr(orig + pos)
+        assert res == str(orig + pos)
 
     @pytest.mark.parametrize(
         "v, add, res",
@@ -740,7 +772,7 @@ class TestAdd:
         ],
     )
     def test_valid_pre(self, v, add, res):
-        assert res == repr(v + add)
+        assert res == str(v + add)
         assert v.pre == add[1:]
 
     @pytest.mark.parametrize(
@@ -755,7 +787,7 @@ class TestAdd:
         ],
     )
     def test_valid_build(self, v, add, res):
-        assert res == repr(v + add)
+        assert res == str(v + add)
         assert v.build == add[1:]
 
 
@@ -816,7 +848,7 @@ class TestSub:
         ],
     )
     def test_valid_inc(self, orig, res, pos):
-        assert res == repr(orig - pos)
+        assert res == str(orig - pos)
 
     @pytest.mark.parametrize(
         "rem, res",
@@ -826,7 +858,7 @@ class TestSub:
         ],
     )
     def test_valid_rm_pre(self, rem, res):
-        assert res == repr(rem - VRm.PRE)
+        assert res == str(rem - VRm.PRE)
         assert rem.pre is None
 
     @pytest.mark.parametrize(
@@ -840,7 +872,7 @@ class TestSub:
         ],
     )
     def test_valid_rm_build(self, rem, res):
-        assert res == repr(rem - VRm.BUILD)
+        assert res == str(rem - VRm.BUILD)
         assert rem.build is None
 
 
@@ -862,11 +894,11 @@ def test_chain():
         - VPos.PRE  # 12.1.1-pre.11+build1
     )
 
-    assert repr(v) == "12.1.1-pre.11+build1"
+    assert str(v) == "12.1.1-pre.11+build1"
 
     v - VRm.BUILD - VRm.PRE
 
-    assert repr(v) == "12.1.1"
+    assert str(v) == "12.1.1"
 
 
 def test_bad_chain():
@@ -988,4 +1020,4 @@ def test_bad_parse(bad):
     ],
 )
 def test_parse(v):
-    assert repr(parse_version(v)) == v
+    assert str(parse_version(v)) == v
