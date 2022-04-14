@@ -16,6 +16,10 @@ class Base(abc.ABC):
         ...
 
     @abc.abstractmethod
+    def __str__(self) -> str:
+        ...
+
+    @abc.abstractmethod
     def __lt__(self, other: t.Any) -> bool:
         ...
 
@@ -40,9 +44,6 @@ class Core(Base):
     """
     A class with commonly implemented methods across version classes.
     """
-
-    def __str__(self) -> str:
-        return self.__repr__()
 
     def __ne__(self, other: t.Any) -> bool:
         return not self == other

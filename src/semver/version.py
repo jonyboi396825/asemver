@@ -87,6 +87,13 @@ class Version(Core):
         self._id_order = [VPos.MAJOR, VPos.MINOR, VPos.PATCH]
 
     def __repr__(self) -> str:
+        """repr of Version"""
+
+        return "Version(major={}, minor={}, patch={}, pre={}, build={})".format(
+            self._major, self._minor, self._patch, repr(self._pre), repr(self._build)
+        )
+
+    def __str__(self) -> str:
         """{MAJOR}.{MINOR}.{PATCH}-{PRE}+{BUILD}"""
 
         pre_str = "" if self._pre is None else str(self._pre)

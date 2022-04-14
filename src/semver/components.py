@@ -50,6 +50,11 @@ class VersionNumber(Core):
         self._number = number
 
     def __repr__(self) -> str:
+        """repr of number"""
+
+        return "VersionNumber(number={})".format(self._number)
+
+    def __str__(self) -> str:
         """Prints number"""
 
         return str(self.number)
@@ -144,9 +149,9 @@ class Pre(Core):
         self._digit = self._cmp[-1] if isinstance(self._cmp[-1], int) else None
 
     def __repr__(self) -> str:
-        """Returns string"""
+        """repr of Pre"""
 
-        return self._string
+        return "Pre(string='{}')".format(self._string)
 
     def __str__(self) -> str:
         """Returns string with hyphen at beginning"""
@@ -346,9 +351,9 @@ class Build:
         self._string = self._check_then_set(string)
 
     def __repr__(self) -> str:
-        """Returns string"""
+        """repr of Build"""
 
-        return self._string
+        return "Build(string='{}')".format(self._string)
 
     def __str__(self) -> str:
         """Returns string with plus sign at beginning"""
