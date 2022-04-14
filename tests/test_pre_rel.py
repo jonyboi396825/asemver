@@ -161,6 +161,40 @@ def test_reset(pre):
 
 
 class TestOperators:
+    @pytest.mark.parametrize("bad", [0.2, 4 + 3j, "abc", object])
+    def test_wrong_type(self, bad):
+        pre = Pre("alpha")
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another pre-release object"
+        ):
+            pre < bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another pre-release object"
+        ):
+            pre > bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another pre-release object"
+        ):
+            pre == bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another pre-release object"
+        ):
+            pre != bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another pre-release object"
+        ):
+            pre <= bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another pre-release object"
+        ):
+            pre >= bad
+
     @pytest.mark.parametrize(
         "lhs, rhs",
         [

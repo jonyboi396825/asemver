@@ -204,6 +204,40 @@ def test_reset():
 
 
 class TestOperators:
+    @pytest.mark.parametrize("bad", [0.2, 4 + 3j, "abc", object])
+    def test_wrong_type(self, bad):
+        v = Version(2, 3, 1, pre="alpha", build="meta")
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another Version object"
+        ):
+            v < bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another Version object"
+        ):
+            v > bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another Version object"
+        ):
+            v == bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another Version object"
+        ):
+            v != bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another Version object"
+        ):
+            v <= bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another Version object"
+        ):
+            v >= bad
+
     @pytest.mark.parametrize(
         "lhs, rhs",
         [

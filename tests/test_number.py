@@ -17,6 +17,40 @@ def test_error_when_neg_int():
 
 
 class TestOperators:
+    @pytest.mark.parametrize("bad", [0.2, 4 + 3j, "abc", object])
+    def test_wrong_type(self, bad):
+        vn = VersionNumber(0)
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another VersionNumber object"
+        ):
+            vn < bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another VersionNumber object"
+        ):
+            vn > bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another VersionNumber object"
+        ):
+            vn == bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another VersionNumber object"
+        ):
+            vn != bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another VersionNumber object"
+        ):
+            vn <= bad
+
+        with pytest.raises(
+            TypeError, match="Must be compared with another VersionNumber object"
+        ):
+            vn >= bad
+
     @pytest.mark.parametrize("n1, n2", [(0, 0), (56, 56), (2, 2)])
     def test_eq(self, n1, n2):
         assert VersionNumber(n1) == VersionNumber(n2)
