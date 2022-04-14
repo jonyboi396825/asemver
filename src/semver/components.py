@@ -3,9 +3,9 @@ Component classes that form the final class
 
 Includes:
 
-- Version number class
-- Pre-release class
-- Build class
+* Version number class
+* Pre-release class
+* Build class
 """
 
 import re

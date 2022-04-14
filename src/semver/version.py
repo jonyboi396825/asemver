@@ -72,10 +72,12 @@ class Version(Core):
         self._major: VersionNumber = self._conv_type(major, VersionNumber)
         self._minor: VersionNumber = self._conv_type(minor, VersionNumber)
         self._patch: VersionNumber = self._conv_type(patch, VersionNumber)
+
+        # pre-release and build labels are set to None if they don't exist
         self._pre: t.Optional[Pre] = self._conv_type(pre, Pre)
         self._build: t.Optional[Build] = self._conv_type(build, Build)
 
-        # for incrementing, decrementing
+        # for incrementing, decrementing (lookups)
         self._id_ref: t.Dict[VPos, t.Union[VersionNumber, Pre, None]] = {
             VPos.MAJOR: self._major,
             VPos.MINOR: self._minor,
