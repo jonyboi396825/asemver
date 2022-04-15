@@ -42,10 +42,10 @@ class VersionNumber(Core):
         """
 
         if not isinstance(number, int):
-            raise TypeError(EXC_MUST_TYPE.format("int"))
+            raise TypeError(EXC_MUST_TYPE.format("int", type(number)))
 
         if number < 0:
-            raise NegativeValueException(EXC_MUST_POSITIVE)
+            raise NegativeValueException(EXC_MUST_POSITIVE.format(number))
 
         self._number = number
 
@@ -66,7 +66,7 @@ class VersionNumber(Core):
             return False
 
         if not isinstance(other, VersionNumber):
-            raise TypeError(EXC_MUST_CMP.format("VersionNumber"))
+            raise TypeError(EXC_MUST_CMP.format("VersionNumber", type(other)))
 
         return self.number == other.number
 
@@ -74,7 +74,7 @@ class VersionNumber(Core):
         """Returns if current number is less than other"""
 
         if not isinstance(other, VersionNumber):
-            raise TypeError(EXC_MUST_CMP.format("VersionNumber"))
+            raise TypeError(EXC_MUST_CMP.format("VersionNumber", type(other)))
 
         return self.number < other.number
 
@@ -115,10 +115,10 @@ class VersionNumber(Core):
     @number.setter
     def number(self, number: int) -> None:
         if not isinstance(number, int):
-            raise TypeError(EXC_MUST_TYPE.format("int"))
+            raise TypeError(EXC_MUST_TYPE.format("int", type(number)))
 
         if number < 0:
-            raise NegativeValueException(EXC_MUST_POSITIVE)
+            raise NegativeValueException(EXC_MUST_POSITIVE.format(number))
 
         self._number = number
 
@@ -165,7 +165,7 @@ class Pre(Core):
             return False
 
         if not isinstance(other, Pre):
-            raise TypeError(EXC_MUST_CMP.format("pre-release"))
+            raise TypeError(EXC_MUST_CMP.format("pre-release", type(other)))
 
         return self.string == other.string
 
@@ -176,7 +176,7 @@ class Pre(Core):
         """
 
         if not isinstance(other, Pre):
-            raise TypeError(EXC_MUST_CMP.format("pre-release"))
+            raise TypeError(EXC_MUST_CMP.format("pre-release", type(other)))
 
         def cmp(lhs: t.Union[str, int], rhs: t.Union[str, int]) -> bool:
             if isinstance(lhs, int) and isinstance(rhs, int):
@@ -195,7 +195,7 @@ class Pre(Core):
         """Increments digit by 1 if exists"""
 
         if self._digit is None:
-            raise NoValueException(EXC_PRE_NO_VALUE)
+            raise NoValueException(EXC_PRE_NO_VALUE.format(self._string))
 
         # make mypy happy
         assert isinstance(self._cmp[-1], int), "Last element of cmp is not int"
@@ -209,7 +209,7 @@ class Pre(Core):
         """Decrements digits by 1 if exists and not 0"""
 
         if self._digit is None:
-            raise NoValueException(EXC_PRE_NO_VALUE)
+            raise NoValueException(EXC_PRE_NO_VALUE.format(self._string))
 
         if self._digit == 0:
             # cannot decrement into a negative value
@@ -325,7 +325,7 @@ class Pre(Core):
         """Raises error if invalid string"""
 
         if not re.match(RE_PRE, string):
-            raise ParseException(EXC_INVALID_STR.format("pre-release"))
+            raise ParseException(EXC_INVALID_STR.format("pre-release", string))
 
         return string
 
@@ -379,6 +379,6 @@ class Build:
         """Raises error if invalid string"""
 
         if not re.match(RE_BUILD, string):
-            raise ParseException(EXC_INVALID_STR.format("build/metadata"))
+            raise ParseException(EXC_INVALID_STR.format("build/metadata", string))
 
         return string

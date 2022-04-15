@@ -110,7 +110,7 @@ class Version(Core):
         """
 
         if not isinstance(other, Version):
-            raise TypeError(EXC_MUST_CMP.format("Version"))
+            raise TypeError(EXC_MUST_CMP.format("Version", type(other)))
 
         def cmp(lhs: t.Any, rhs: t.Any) -> bool:
             if lhs is None and rhs is not None:
@@ -134,7 +134,7 @@ class Version(Core):
         """Compares equality (excluding build versions)"""
 
         if not isinstance(other, Version):
-            raise TypeError(EXC_MUST_CMP.format("Version"))
+            raise TypeError(EXC_MUST_CMP.format("Version", type(other)))
 
         l1 = [self._major, self._minor, self._patch, self._pre]
         l2 = [other._major, other._minor, other._patch, other._pre]
@@ -165,19 +165,19 @@ class Version(Core):
                 # set pre if it doesn't exist
                 if self.has_pre:
                     raise InvalidOperationException(
-                        EXC_CANNOT_ADD.format("pre-release")
+                        EXC_CANNOT_ADD.format("pre-release", repr(self))
                     )
                 self._pre = self._conv_type(other[1:], Pre)
             elif other[0] == "+":
                 # set build if it doesn't exist
                 if self.has_build:
                     raise InvalidOperationException(
-                        EXC_CANNOT_ADD.format("build metadata")
+                        EXC_CANNOT_ADD.format("build metadata", repr(self))
                     )
                 self._build = self._conv_type(other[1:], Build)
             else:
                 # unknown string
-                raise InvalidOperationException(EXC_INVALID_STR_2.format("add"))
+                raise InvalidOperationException(EXC_INVALID_STR_2.format("add", other))
         else:
             # unknown type
             raise TypeError(EXC_BAD_TYPE.format("+", type(other)))
@@ -202,13 +202,15 @@ class Version(Core):
             if other == VRm.PRE:
                 # remove pre if it exists
                 if not self.has_pre:
-                    raise InvalidOperationException(EXC_CANNOT_RM.format("pre-release"))
+                    raise InvalidOperationException(
+                        EXC_CANNOT_RM.format("pre-release", repr(self))
+                    )
                 self.remove_pre()
             else:
                 # remove pre if it exists
                 if not self.has_build:
                     raise InvalidOperationException(
-                        EXC_CANNOT_RM.format("build metadata")
+                        EXC_CANNOT_RM.format("build metadata", repr(self))
                     )
                 self.remove_build()
         else:
@@ -245,11 +247,11 @@ class Version(Core):
             pos = VPos.PRE
 
         if not isinstance(pos, VPos) or pos not in self._id_ref:
-            raise InvalidPositionException(EXC_INVALID_POS)
+            raise InvalidPositionException(EXC_INVALID_POS.format(pos))
 
         if pos == VPos.PRE:
             if self._pre is None:
-                raise NoValueException(EXC_PRE_NO_VALUE_2)
+                raise NoValueException(EXC_PRE_NO_VALUE_2.format(repr(self)))
 
             self._pre.inc()
             return
@@ -287,13 +289,13 @@ class Version(Core):
             pos = VPos.PRE
 
         if not isinstance(pos, VPos):
-            raise InvalidPositionException(EXC_INVALID_POS)
+            raise InvalidPositionException(EXC_INVALID_POS.format(pos))
 
         if pos == VPos.PRE:
             # not decrementing from lookup dict because
             # self._pre can be None on initialization
             if self._pre is None:
-                raise NoValueException(EXC_PRE_NO_VALUE_2)
+                raise NoValueException(EXC_PRE_NO_VALUE_2.format(repr(self)))
 
             self._pre.dec()
             return
@@ -534,7 +536,7 @@ def parse_version(version: str) -> Version:
 
     # is not valid string
     if not parsed:
-        raise ParseException(EXC_INVALID_STR.format("semantic version"))
+        raise ParseException(EXC_INVALID_STR.format("semantic version", version))
 
     # get versions from groups
     major, minor, patch, pre, build = parsed.groups()
