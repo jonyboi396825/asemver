@@ -230,6 +230,89 @@ class TestProperties:
         # should not delete major, patch, or build versions
         assert v.major == 0 and v.minor == 0 and v.patch == 0
 
+    @pytest.mark.parametrize(
+        "v, true",
+        [
+            (Version(0, 0, 0, "4.6.x"), False),
+            (Version(0, 0, 0, "beta.56"), False),
+            (Version(0, 0, 0, "alpha"), True),
+            (Version(0, 0, 0, "alphab"), False),
+            (Version(0, 0, 0, "alpha.5"), True),
+            (Version(0, 0, 0, "alpha.x.4.x"), True),
+            (Version(0, 0, 0, "alpha0.x"), True),
+            (Version(0, 0, 0, "a0"), True),
+            (Version(0, 0, 0, "ab"), False),
+            (Version(0, 0, 0, "ab2"), False),
+        ],
+    )
+    def test_is_alpha(self, v, true):
+        assert v.is_alpha == true
+
+    @pytest.mark.parametrize(
+        "v, true",
+        [
+            (Version(0, 0, 0, "4.6.x"), False),
+            (Version(0, 0, 0, "beta.56"), True),
+            (Version(0, 0, 0, "beta"), True),
+            (Version(0, 0, 0, "beta0"), True),
+            (Version(0, 0, 0, "alpha.5"), False),
+            (Version(0, 0, 0, "beta.x.4.x"), True),
+            (Version(0, 0, 0, "alpha0.x"), False),
+            (Version(0, 0, 0, "rc.x"), False),
+            (Version(0, 0, 0, "b24"), True),
+            (Version(0, 0, 0, "betab"), False),
+            (Version(0, 0, 0, "bb8"), False),
+        ],
+    )
+    def test_is_beta(self, v, true):
+        assert v.is_beta == true
+
+    @pytest.mark.parametrize(
+        "v, true",
+        [
+            (Version(0, 0, 0, "4.6.x"), False),
+            (Version(0, 0, 0, "beta.56"), False),
+            (Version(0, 0, 0, "beta"), False),
+            (Version(0, 0, 0, "alpha.5"), False),
+            (Version(0, 0, 0, "beta.x.4.x"), False),
+            (Version(0, 0, 0, "rc.x"), True),
+            (Version(0, 0, 0, "rc.2.x.4"), True),
+            (Version(0, 0, 0, "rc"), True),
+            (Version(0, 0, 0, "rc6.2"), True),
+            (Version(0, 0, 0, "rcd"), False),
+        ],
+    )
+    def test_is_rc(self, v, true):
+        assert v.is_rc == true
+
+    @pytest.mark.parametrize(
+        "v, true",
+        [
+            (Version(0, 0, 0, "4.6.x"), False),
+            (Version(0, 0, 0, "beta.56"), False),
+            (Version(0, 0, 0, "beta"), False),
+            (Version(0, 0, 0, "alpha.5"), False),
+            (Version(0, 0, 0, "beta.x.4.x"), False),
+            (Version(0, 0, 0, "rc.x"), False),
+            (Version(0, 0, 0, "rc.2.x.4", build="meta2xb2"), False),
+            (Version(0, 0, 0, "rc"), False),
+            (Version(0, 0, 0, "rc6.2"), False),
+            (Version(0, 0, 0, "rcd"), False),
+            (Version(0, 0, 0, "betab"), False),
+            (Version(0, 0, 0, "bb8"), False),
+            (Version(0, 0, 0, "alpha.x.4.x", build="meta"), False),
+            (Version(0, 0, 0, "alpha0.x"), False),
+            (Version(0, 0, 0, "a0"), False),
+            (Version(0, 0, 0, "ab"), False),
+            (Version(0, 0, 0, "ab2"), False),
+            (Version(0, 2, 3, build="build293"), False),
+            (Version(0, 1, 5), True),
+            (Version(2, 1, 1), True),
+        ],
+    )
+    def test_is_final(self, v, true):
+        assert v.is_final == true
+
 
 def test_reset():
     v = Version(6, 11, 23, pre="rc.6", build="meta")
@@ -590,93 +673,6 @@ def test_remove_pre_build():
     v.remove_build()
     v.remove_pre()
     assert str(v) == "2.1.5"
-
-
-@pytest.mark.parametrize(
-    "v, true",
-    [
-        (Version(0, 0, 0, "4.6.x"), False),
-        (Version(0, 0, 0, "beta.56"), False),
-        (Version(0, 0, 0, "alpha"), True),
-        (Version(0, 0, 0, "alphab"), False),
-        (Version(0, 0, 0, "alpha.5"), True),
-        (Version(0, 0, 0, "alpha.x.4.x"), True),
-        (Version(0, 0, 0, "alpha0.x"), True),
-        (Version(0, 0, 0, "a0"), True),
-        (Version(0, 0, 0, "ab"), False),
-        (Version(0, 0, 0, "ab2"), False),
-    ],
-)
-def test_is_alpha(v, true):
-    assert v.is_alpha == true
-
-
-@pytest.mark.parametrize(
-    "v, true",
-    [
-        (Version(0, 0, 0, "4.6.x"), False),
-        (Version(0, 0, 0, "beta.56"), True),
-        (Version(0, 0, 0, "beta"), True),
-        (Version(0, 0, 0, "beta0"), True),
-        (Version(0, 0, 0, "alpha.5"), False),
-        (Version(0, 0, 0, "beta.x.4.x"), True),
-        (Version(0, 0, 0, "alpha0.x"), False),
-        (Version(0, 0, 0, "rc.x"), False),
-        (Version(0, 0, 0, "b24"), True),
-        (Version(0, 0, 0, "betab"), False),
-        (Version(0, 0, 0, "bb8"), False),
-    ],
-)
-def test_is_beta(v, true):
-    assert v.is_beta == true
-
-
-@pytest.mark.parametrize(
-    "v, true",
-    [
-        (Version(0, 0, 0, "4.6.x"), False),
-        (Version(0, 0, 0, "beta.56"), False),
-        (Version(0, 0, 0, "beta"), False),
-        (Version(0, 0, 0, "alpha.5"), False),
-        (Version(0, 0, 0, "beta.x.4.x"), False),
-        (Version(0, 0, 0, "rc.x"), True),
-        (Version(0, 0, 0, "rc.2.x.4"), True),
-        (Version(0, 0, 0, "rc"), True),
-        (Version(0, 0, 0, "rc6.2"), True),
-        (Version(0, 0, 0, "rcd"), False),
-    ],
-)
-def test_is_rc(v, true):
-    assert v.is_rc == true
-
-
-@pytest.mark.parametrize(
-    "v, true",
-    [
-        (Version(0, 0, 0, "4.6.x"), False),
-        (Version(0, 0, 0, "beta.56"), False),
-        (Version(0, 0, 0, "beta"), False),
-        (Version(0, 0, 0, "alpha.5"), False),
-        (Version(0, 0, 0, "beta.x.4.x"), False),
-        (Version(0, 0, 0, "rc.x"), False),
-        (Version(0, 0, 0, "rc.2.x.4", build="meta2xb2"), False),
-        (Version(0, 0, 0, "rc"), False),
-        (Version(0, 0, 0, "rc6.2"), False),
-        (Version(0, 0, 0, "rcd"), False),
-        (Version(0, 0, 0, "betab"), False),
-        (Version(0, 0, 0, "bb8"), False),
-        (Version(0, 0, 0, "alpha.x.4.x", build="meta"), False),
-        (Version(0, 0, 0, "alpha0.x"), False),
-        (Version(0, 0, 0, "a0"), False),
-        (Version(0, 0, 0, "ab"), False),
-        (Version(0, 0, 0, "ab2"), False),
-        (Version(0, 2, 3, build="build293"), False),
-        (Version(0, 1, 5), True),
-        (Version(2, 1, 1), True),
-    ],
-)
-def test_is_final(v, true):
-    assert v.is_final == true
 
 
 @pytest.mark.parametrize(
