@@ -313,6 +313,36 @@ class TestProperties:
     def test_is_final(self, v, true):
         assert v.is_final == true
 
+    @pytest.mark.parametrize(
+        "v, true",
+        [
+            (Version(0, 0, 0, "4.6.x"), False),
+            (Version(0, 0, 0, "beta.56"), False),
+            (Version(1, 0, 0, "beta"), False),
+            (Version(1, 0, 0, "alpha.5"), False),
+            (Version(1, 0, 0, "beta.x.4.x"), False),
+            (Version(0, 0, 0, "rc.x"), False),
+            (Version(1, 0, 0, "rc.2.x.4", build="meta2xb2"), False),
+            (Version(0, 0, 0, "rc"), False),
+            (Version(1, 0, 0, "rc6.2"), False),
+            (Version(1, 0, 0, "rcd"), False),
+            (Version(0, 0, 0, "betab"), False),
+            (Version(0, 0, 0, "bb8"), False),
+            (Version(0, 0, 0, "alpha.x.4.x", build="meta"), False),
+            (Version(1, 0, 0, "alpha0.x"), False),
+            (Version(1, 0, 0, "a0"), False),
+            (Version(1, 0, 0, "ab"), False),
+            (Version(1, 0, 0, "ab2"), False),
+            (Version(0, 2, 3, build="build293"), False),
+            (Version(0, 1, 5), False),
+            (Version(1, 0, 0, build="abcd2"), False),
+            (Version(2, 1, 1), True),
+            (Version(1, 0, 0), True),
+        ],
+    )
+    def test_is_stable(self, v, true):
+        assert v.is_stable == true
+
 
 def test_reset():
     v = Version(6, 11, 23, pre="rc.6", build="meta")

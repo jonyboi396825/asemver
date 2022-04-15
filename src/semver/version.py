@@ -488,7 +488,7 @@ class Version(Core):
         Checks if it is a release candidate by seeing if the first dot-separated \
         identifier starts with 'rc', followed by an empty string or a digit.
 
-        Example: 1.4.5-beta0 and 1.4.5-beta.2.x.5 are beta releases.
+        Example: 4.4.1-rc0 and 4.4.1-rc.6 are release candidates.
 
         If there is no pre-release, returns False.
         """
@@ -505,10 +505,22 @@ class Version(Core):
         Checks if there is any pre-release label or build label. A final release \
         is a release that has no pre-release or build labels.
 
-        Example: 2.6.2 is a pre-release but 2.1.2+build3201b3 is not
+        Example: 2.6.2 is a final release but 2.1.2+build3201b3 is not
         """
 
         return not self.has_build and not self.has_pre
+
+    @property
+    def is_stable(self) -> bool:
+        """If current version is a stable release
+
+        A stable release is a release that has no pre-release or build labels and \
+        whose version does not start with 0.
+
+        Example: 2.6.2 is a stable release but 2.1.2+build3201b3 and 0.5.2 are not.
+        """
+
+        return self.major > 0 and self.is_final
 
     def _conv_type(self, val: t.Any, cls: t.Type) -> t.Any:
         """If val is of type cls, then returns. Otherwise converts to cls type"""
