@@ -1,12 +1,6 @@
 import pytest
 import re
 from semver.components import Pre
-from semver.constants import (
-    EXC_INVALID_STR,
-    EXC_MUST_CMP,
-    EXC_PRE_NO_VALUE,
-    EXC_CANNOT_DEC,
-)
 from semver.exc import NegativeValueException, ParseException, NoValueException
 
 
@@ -43,13 +37,15 @@ class TestParse:
     )
     def test_bad_parse(self, bad):
         with pytest.raises(
-            ParseException, match=re.escape(EXC_INVALID_STR.format("pre-release"))
+            ParseException,
+            match=re.escape("Invalid pre-release string: {}".format(bad)),
         ):
             Pre(bad)
 
         # tests setter
         with pytest.raises(
-            ParseException, match=re.escape(EXC_INVALID_STR.format("pre-release"))
+            ParseException,
+            match=re.escape("Invalid pre-release string: {}".format(bad)),
         ):
             p = Pre("-")
             p.string = bad
@@ -303,35 +299,6 @@ class TestOperators:
         assert Pre(lhs) <= Pre(rhs)
         assert Pre(rhs) >= Pre(lhs)
 
-    @pytest.mark.parametrize(
-        "lhs, rhs",
-        [
-            (Pre("alpha"), "alpha.1"),
-            ("alpha.1", Pre("alpha.beta")),
-            (25, Pre("beta")),
-        ],
-    )
-    def test_bad_cmp(self, lhs, rhs):
-        with pytest.raises(
-            TypeError, match=re.escape(EXC_MUST_CMP.format("pre-release"))
-        ):
-            lhs < rhs
-
-        with pytest.raises(
-            TypeError, match=re.escape(EXC_MUST_CMP.format("pre-release"))
-        ):
-            lhs <= rhs
-
-        with pytest.raises(
-            TypeError, match=re.escape(EXC_MUST_CMP.format("pre-release"))
-        ):
-            lhs > rhs
-
-        with pytest.raises(
-            TypeError, match=re.escape(EXC_MUST_CMP.format("pre-release"))
-        ):
-            lhs >= rhs
-
 
 class TestInc:
     @pytest.mark.parametrize(
@@ -339,7 +306,15 @@ class TestInc:
     )
     def test_cannot_inc(self, bad):
         p = Pre(bad)
-        with pytest.raises(NoValueException, match=EXC_PRE_NO_VALUE):
+        with pytest.raises(
+            NoValueException,
+            match=re.escape(
+                (
+                    "No digit to increment/decrement. Make sure the last dot-separated"
+                    " identifier is a numeric value: {}"
+                ).format(bad)
+            ),
+        ):
             p.inc()
 
     @pytest.mark.parametrize(
@@ -365,7 +340,15 @@ class TestDec:
     )
     def test_cannot_dec(self, bad):
         p = Pre(bad)
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE)):
+        with pytest.raises(
+            NoValueException,
+            match=re.escape(
+                (
+                    "No digit to increment/decrement. Make sure the last dot-separated"
+                    " identifier is a numeric value: {}"
+                ).format(bad)
+            ),
+        ):
             p.dec()
 
     @pytest.mark.parametrize(
@@ -388,7 +371,10 @@ class TestDec:
     )
     def test_dec_zeroed(self, zeroed):
         p = Pre(zeroed)
-        with pytest.raises(NegativeValueException, match=re.escape(EXC_CANNOT_DEC)):
+        with pytest.raises(
+            NegativeValueException,
+            match=re.escape("Cannot decrement number to a negative value"),
+        ):
             p.dec()
 
 

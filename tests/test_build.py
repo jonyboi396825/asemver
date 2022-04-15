@@ -2,14 +2,13 @@ import re
 
 import pytest
 from semver.components import Build
-from semver.constants import EXC_INVALID_STR
 from semver.exc import ParseException
 
 
 @pytest.mark.parametrize("bad", ["meta+meta", "", "+", "+meta", "meta_bad", " ", "."])
 def test_bad_parse(bad):
     with pytest.raises(
-        ParseException, match=re.escape(EXC_INVALID_STR.format("build/metadata"))
+        ParseException, match=re.escape("Invalid build/metadata string: {}".format(bad))
     ):
         Build(bad)
 
@@ -61,7 +60,7 @@ def test_repr(good, rep):
 def test_bad_setter(bad):
     b = Build("meta")
     with pytest.raises(
-        ParseException, match=re.escape(EXC_INVALID_STR.format("build/metadata"))
+        ParseException, match=re.escape("Invalid build/metadata string: {}".format(bad))
     ):
         b.string = bad
 

@@ -2,14 +2,6 @@ import pytest
 import re
 from semver.version import Version, VersionNumber, Pre, Build, parse_version
 from semver.constants import (
-    EXC_CANNOT_DEC,
-    EXC_INVALID_POS,
-    EXC_INVALID_STR,
-    EXC_MUST_CMP,
-    EXC_MUST_POSITIVE,
-    EXC_MUST_TYPE,
-    EXC_PRE_NO_VALUE,
-    EXC_PRE_NO_VALUE_2,
     VPos,
     VRm,
 )
@@ -27,18 +19,26 @@ class TestConstructor:
         "major, minor, patch", [(-1, 0, 5), (0, -4, 6), (0, 0, -3)]
     )
     def test_error_on_negative(self, major, minor, patch):
-        with pytest.raises(NegativeValueException, match=re.escape(EXC_MUST_POSITIVE)):
+        with pytest.raises(
+            NegativeValueException, match=r"Number must be positive: [\d]*"
+        ):
             Version(major, minor, patch)
 
     @pytest.mark.parametrize("bad", ["01", 3.6, 2 + 5j, -2.5, object])
     def test_error_number_on_non_int(self, bad):
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_TYPE.format("int"))):
+        with pytest.raises(
+            TypeError, match=r"Value must be a\(n\) int, not {}".format(type(bad))
+        ):
             Version(bad, 0, 0)
 
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_TYPE.format("int"))):
+        with pytest.raises(
+            TypeError, match=r"Value must be a\(n\) int, not {}".format(type(bad))
+        ):
             Version(0, bad, 0)
 
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_TYPE.format("int"))):
+        with pytest.raises(
+            TypeError, match=r"Value must be a\(n\) int, not {}".format(type(bad))
+        ):
             Version(0, 0, bad)
 
     @pytest.mark.parametrize(
@@ -68,7 +68,8 @@ class TestConstructor:
     )
     def test_error_bad_pre(self, bad):
         with pytest.raises(
-            ParseException, match=re.escape(EXC_INVALID_STR.format("pre-release"))
+            ParseException,
+            match=re.escape("Invalid pre-release string: {}".format(bad)),
         ):
             Version(0, 0, 0, pre=bad)
 
@@ -77,21 +78,29 @@ class TestConstructor:
     )
     def test_error_bad_build(self, bad):
         with pytest.raises(
-            ParseException, match=re.escape(EXC_INVALID_STR.format("build/metadata"))
+            ParseException,
+            match=re.escape("Invalid build/metadata string: {}".format(bad)),
         ):
             Version(0, 0, 0, build=bad)
 
     def test_bad_pre_and_build(self):
+        """Pre should come first"""
+
         with pytest.raises(
-            ParseException, match=re.escape(EXC_INVALID_STR.format("pre-release"))
+            ParseException, match=re.escape("Invalid pre-release string: alpha..11")
         ):
             Version(0, 0, 0, build="meta+meta", pre="alpha..11")
 
     def test_bad_num_pre_and_build(self):
-        with pytest.raises(NegativeValueException, match=re.escape(EXC_MUST_POSITIVE)):
+        with pytest.raises(
+            NegativeValueException, match=re.escape("Number must be positive: -1")
+        ):
             Version(0, -1, 2, build="meta+meta", pre="alpha..11")
 
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_TYPE.format("int"))):
+        with pytest.raises(
+            TypeError,
+            match=re.escape("Value must be a(n) int, not {}".format(type(1j))),
+        ):
             Version(2 + 5j, -1, 2, build="meta+meta", pre="alpha..11")
 
     @pytest.mark.parametrize(
@@ -241,32 +250,50 @@ class TestOperators:
         v = Version(2, 3, 1, pre="alpha", build="meta")
 
         with pytest.raises(
-            TypeError, match="Must be compared with another Version object"
+            TypeError,
+            match="Must be compared with another Version object, not {}".format(
+                type(bad)
+            ),
         ):
             v < bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another Version object"
+            TypeError,
+            match="Must be compared with another Version object, not {}".format(
+                type(bad)
+            ),
         ):
             v > bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another Version object"
+            TypeError,
+            match="Must be compared with another Version object, not {}".format(
+                type(bad)
+            ),
         ):
             v == bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another Version object"
+            TypeError,
+            match="Must be compared with another Version object, not {}".format(
+                type(bad)
+            ),
         ):
             v != bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another Version object"
+            TypeError,
+            match="Must be compared with another Version object, not {}".format(
+                type(bad)
+            ),
         ):
             v <= bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another Version object"
+            TypeError,
+            match="Must be compared with another Version object, not {}".format(
+                type(bad)
+            ),
         ):
             v >= bad
 
@@ -381,32 +408,14 @@ class TestOperators:
             >= Version(1, 0, 0, "alpha")
         )
 
-    @pytest.mark.parametrize("rhs", ["abc", 2, 5.34, object, 4 + 2j, b"\x3d"])
-    def test_err_cmp_wrong_type(self, rhs):
-        v = Version(0, 0, 0)
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_CMP.format("Version"))):
-            v == rhs
-
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_CMP.format("Version"))):
-            v != rhs
-
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_CMP.format("Version"))):
-            v < rhs
-
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_CMP.format("Version"))):
-            v > rhs
-
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_CMP.format("Version"))):
-            v <= rhs
-
-        with pytest.raises(TypeError, match=re.escape(EXC_MUST_CMP.format("Version"))):
-            v >= rhs
-
 
 @pytest.mark.parametrize("bad", [5, "str", 4.2, object, 2 + 1j, VRm.BUILD, VRm.PRE])
 def test_bad_inc_dec_pos(bad):
     v = Version(2, 5, 3, pre="beta.45", build="meta")
-    with pytest.raises(InvalidPositionException, match=re.escape(EXC_INVALID_POS)):
+    with pytest.raises(
+        InvalidPositionException,
+        match=re.escape("Unrecognized version position: {}".format(bad)),
+    ):
         v.inc(bad)
 
 
@@ -443,10 +452,10 @@ class TestInc:
 
     @pytest.mark.parametrize("v", [Version(2, 5, 3, build="meta"), Version(2, 5, 3)])
     def test_pre_error_if_no_pre(self, v):
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE_2)):
-            v.inc(VPos.PRE)
-
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE_2)):
+        with pytest.raises(
+            NoValueException,
+            match=re.escape("Object has no pre-release label: {}".format(repr(v))),
+        ):
             v.inc(VPos.PRE)
 
     @pytest.mark.parametrize(
@@ -457,10 +466,15 @@ class TestInc:
         ],
     )
     def test_pre_error_if_no_pre_digit(self, v):
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE)):
-            v.inc(VPos.PRE)
-
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE)):
+        with pytest.raises(
+            NoValueException,
+            match=re.escape(
+                (
+                    "No digit to increment/decrement. Make sure the last "
+                    "dot-separated identifier is a numeric value: {}".format(v.pre)
+                )
+            ),
+        ):
             v.inc(VPos.PRE)
 
     def test_pre(self):
@@ -507,10 +521,10 @@ class TestDec:
 
     @pytest.mark.parametrize("v", [Version(2, 5, 3, build="meta"), Version(2, 5, 3)])
     def test_pre_error_if_no_pre(self, v):
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE_2)):
-            v.dec(VPos.PRE)
-
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE_2)):
+        with pytest.raises(
+            NoValueException,
+            match=re.escape("Object has no pre-release label: {}".format(repr(v))),
+        ):
             v.dec(VPos.PRE)
 
     @pytest.mark.parametrize(
@@ -521,10 +535,15 @@ class TestDec:
         ],
     )
     def test_pre_error_if_no_pre_digit(self, v):
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE)):
-            v.dec(VPos.PRE)
-
-        with pytest.raises(NoValueException, match=re.escape(EXC_PRE_NO_VALUE)):
+        with pytest.raises(
+            NoValueException,
+            match=re.escape(
+                (
+                    "No digit to increment/decrement. Make sure the last "
+                    "dot-separated identifier is a numeric value: {}".format(v.pre)
+                )
+            ),
+        ):
             v.dec(VPos.PRE)
 
     def test_pre(self):
@@ -547,7 +566,10 @@ class TestDec:
         ],
     )
     def test_dec_neg_error(self, v, dec):
-        with pytest.raises(NegativeValueException, match=re.escape(EXC_CANNOT_DEC)):
+        with pytest.raises(
+            NegativeValueException,
+            match=re.escape("Cannot decrement number to a negative value"),
+        ):
             v.dec(dec)
 
 
@@ -796,14 +818,18 @@ class TestSub:
         v = Version(0, 0, 0)
         with pytest.raises(
             InvalidOperationException,
-            match=re.escape("Cannot remove pre-release that does not exist."),
+            match=re.escape(
+                "Cannot remove pre-release that does not exist: {}".format(repr(v))
+            ),
         ):
             v - VRm.PRE
 
         v = Version(0, 0, 0, build="abc")
         with pytest.raises(
             InvalidOperationException,
-            match=re.escape("Cannot remove pre-release that does not exist."),
+            match=re.escape(
+                "Cannot remove pre-release that does not exist: {}".format(repr(v))
+            ),
         ):
             v - VRm.PRE
 
@@ -811,14 +837,18 @@ class TestSub:
         v = Version(0, 0, 0)
         with pytest.raises(
             InvalidOperationException,
-            match=re.escape("Cannot remove build metadata that does not exist."),
+            match=re.escape(
+                "Cannot remove build metadata that does not exist: {}".format(repr(v))
+            ),
         ):
             v - VRm.BUILD
 
         v = Version(0, 0, 0, pre="abc")
         with pytest.raises(
             InvalidOperationException,
-            match=re.escape("Cannot remove build metadata that does not exist."),
+            match=re.escape(
+                "Cannot remove build metadata that does not exist: {}".format(repr(v))
+            ),
         ):
             v - VRm.BUILD
 
@@ -909,7 +939,12 @@ def test_bad_chain():
     v = Version(10, 10, 10)
     with pytest.raises(
         InvalidOperationException,
-        match=re.escape("Cannot remove build metadata that does not exist."),
+        match=re.escape(
+            (
+                "Cannot remove build metadata that does not exist: "
+                "Version(major=13, minor=0, patch=2, pre=None, build=None)"
+            )
+        ),
     ):
         (
             v
@@ -978,7 +1013,8 @@ def test_bad_chain():
 )
 def test_bad_parse(bad):
     with pytest.raises(
-        ParseException, match=re.escape("Invalid semantic version string.")
+        ParseException,
+        match=re.escape("Invalid semantic version string: {}".format(bad)),
     ):
         parse_version(bad)
 

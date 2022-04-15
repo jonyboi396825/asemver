@@ -1,18 +1,22 @@
 import pytest
 import re
 from semver.components import VersionNumber
-from semver.constants import EXC_CANNOT_DEC, EXC_MUST_TYPE, EXC_MUST_POSITIVE
 from semver.exc import NegativeValueException
 
 
 @pytest.mark.parametrize("bad_param", ["01", 3.6, 2 + 5j, -2.5, object])
 def test_error_number_non_int(bad_param):
-    with pytest.raises(TypeError, match=re.escape(EXC_MUST_TYPE.format("int"))):
+    with pytest.raises(
+        TypeError,
+        match=re.escape("Value must be a(n) int, not {}".format(type(bad_param))),
+    ):
         VersionNumber(bad_param)
 
 
 def test_error_when_neg_int():
-    with pytest.raises(NegativeValueException, match=re.escape(EXC_MUST_POSITIVE)):
+    with pytest.raises(
+        NegativeValueException, match=re.escape("Number must be positive: -5")
+    ):
         VersionNumber(-5)
 
 
@@ -22,32 +26,56 @@ class TestOperators:
         vn = VersionNumber(0)
 
         with pytest.raises(
-            TypeError, match="Must be compared with another VersionNumber object"
+            TypeError,
+            match=(
+                "Must be compared with another VersionNumber object,"
+                " not {}".format(type(bad))
+            ),
         ):
             vn < bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another VersionNumber object"
+            TypeError,
+            match=(
+                "Must be compared with another VersionNumber object,"
+                " not {}".format(type(bad))
+            ),
         ):
             vn > bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another VersionNumber object"
+            TypeError,
+            match=(
+                "Must be compared with another VersionNumber object,"
+                " not {}".format(type(bad))
+            ),
         ):
             vn == bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another VersionNumber object"
+            TypeError,
+            match=(
+                "Must be compared with another VersionNumber object,"
+                " not {}".format(type(bad))
+            ),
         ):
             vn != bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another VersionNumber object"
+            TypeError,
+            match=(
+                "Must be compared with another VersionNumber object,"
+                " not {}".format(type(bad))
+            ),
         ):
             vn <= bad
 
         with pytest.raises(
-            TypeError, match="Must be compared with another VersionNumber object"
+            TypeError,
+            match=(
+                "Must be compared with another VersionNumber object,"
+                " not {}".format(type(bad))
+            ),
         ):
             vn >= bad
 
@@ -98,7 +126,10 @@ def test_dec(orig, res):
 
 def test_dec_err():
     num = VersionNumber(0)
-    with pytest.raises(NegativeValueException, match=EXC_CANNOT_DEC):
+    with pytest.raises(
+        NegativeValueException,
+        match=re.escape("Cannot decrement number to a negative value"),
+    ):
         num.dec()
 
 
@@ -172,7 +203,10 @@ def test_setter(num):
 def test_setter_bad_type(bad_num):
     num = VersionNumber()
 
-    with pytest.raises(TypeError, match=re.escape(EXC_MUST_TYPE.format("int"))):
+    with pytest.raises(
+        TypeError,
+        match=re.escape("Value must be a(n) int, not {}".format(type(bad_num))),
+    ):
         num.number = bad_num
 
 
@@ -180,7 +214,10 @@ def test_setter_bad_type(bad_num):
 def test_setter_negative(bad_num):
     num = VersionNumber()
 
-    with pytest.raises(NegativeValueException, match=re.escape(EXC_MUST_POSITIVE)):
+    with pytest.raises(
+        NegativeValueException,
+        match=re.escape("Number must be positive: {}".format(bad_num)),
+    ):
         num.number = bad_num
 
 
