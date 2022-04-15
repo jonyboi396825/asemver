@@ -537,6 +537,8 @@ class Version(Core):
 def parse_version(version: str) -> Version:
     """Parses a semantic version string into a Version class
 
+    The string must not include 'v' in the beginning.
+
     Args:
         version (str): Semantic verion string
 
