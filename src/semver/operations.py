@@ -233,6 +233,88 @@ def get_pre_digit(version: str) -> t.Optional[int]:
     return v.pre_digit
 
 
+def set_build(version: str, build: str) -> str:
+    """Sets the build label in the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+        build (str): The build label to set in the string \
+                (must not include '+' in beginning)
+
+    Returns:
+        str: The string with the build label set
+    """
+
+    v = parse_version(version)
+    v.build = build
+    return str(v)
+
+
+def set_major(version: str, major: int) -> str:
+    """Sets the major version in the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+        major (int): The major version to set
+
+    Returns:
+        str: The version string with the new major version
+    """
+
+    v = parse_version(version)
+    v.major = major
+    return str(v)
+
+
+def set_minor(version: str, minor: int) -> str:
+    """Sets the minor version in the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+        minor (int): The minor version to set
+
+    Returns:
+        str: The version string with the new minor version
+    """
+
+    v = parse_version(version)
+    v.minor = minor
+    return str(v)
+
+
+def set_patch(version: str, patch: int) -> str:
+    """Sets the patch version in the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+        patch (int): The patch version to set
+
+    Returns:
+        str: The version string with the new patch version
+    """
+
+    v = parse_version(version)
+    v.patch = patch
+    return str(v)
+
+
+def set_pre(version: str, pre: str) -> str:
+    """Sets the pre-release label in the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+        pre (str): The pre-release label to set in the string \
+                (must not include '-' in beginning)
+
+    Returns:
+        str: The string with the pre-release label set
+    """
+
+    v = parse_version(version)
+    v.pre = pre
+    return str(v)
+
+
 def sub(version: str, *operations: t.Union[VPos, VRm]) -> str:
     """The Version - operator on a string representing a version
 

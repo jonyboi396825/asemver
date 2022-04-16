@@ -1,5 +1,5 @@
 """
-get_build(), get_major(), get_minor(), get_patch(), get_pre()
+get_build(), get_major(), get_minor(), get_patch(), get_pre(), get_pre_digit()
 """
 
 import pytest
