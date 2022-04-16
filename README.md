@@ -4,13 +4,12 @@
 
 ## To do:
 
-### 0.1.0
+### 0.2.0
 
-- helper functions (0.1.x)
+- CLI (0.2.x)
 
 ### Future releases:
 
-- CLI (0.2.x)
 - documentation (0.3.x)
 - setup GitHub (actions, contributing.md, code of conduct, security, deploy sphinx docs, etc), and discover any remaining bugs (0.4.x)
 - final release (1.x)
