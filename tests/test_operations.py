@@ -1,6 +1,10 @@
 import pytest
 from semver.constants import VPos, VRm
-from semver.operations import add, sub, update, compare
+from semver.operations import add, sub, update
+
+"""
+add(), sub(), update(), bump()
+"""
 
 
 @pytest.mark.parametrize(
@@ -74,56 +78,3 @@ def test_sub(v, res, op):
 )
 def test_update(v, res, op):
     assert res == update(v, *op)
-
-
-@pytest.mark.parametrize(
-    "lhs, rhs",
-    [
-        ("4.5.6", "4.5.6"),
-        ("4.5.6-alpha.1", "4.5.6-alpha.1"),
-        ("4.5.6+meta1", "4.5.6+meta2"),
-        ("4.5.6-alpha.1+meta1", "4.5.6-alpha.1+meta2"),
-    ],
-)
-def test_eq(lhs, rhs):
-    assert compare(lhs, rhs) == 0
-
-
-@pytest.mark.parametrize(
-    "lhs, rhs",
-    [
-        ("1.0.0-alpha", "1.0.0-alpha.1"),
-        ("1.0.0-alpha.1", "1.0.0-alpha.beta"),
-        ("1.0.0-alpha.beta", "1.0.0-beta"),
-        ("1.0.0-beta", "1.0.0-beta.11"),
-        ("1.0.0-beta.11", "1.0.0-rc.1"),
-        ("1.0.0-rc.1", "1.0.0"),
-        ("1.0.0", "1.0.1-beta.1"),
-        ("1.0.1-beta.1", "1.0.1-rc.6"),
-        ("1.0.1-rc.6", "1.0.1"),
-        ("1.0.1", "1.2.0"),
-        ("1.2.0", "2.0.0"),
-    ],
-)
-def test_lt(lhs, rhs):
-    assert compare(lhs, rhs) < 0
-
-
-@pytest.mark.parametrize(
-    "rhs, lhs",
-    [
-        ("1.0.0-alpha", "1.0.0-alpha.1"),
-        ("1.0.0-alpha.1", "1.0.0-alpha.beta"),
-        ("1.0.0-alpha.beta", "1.0.0-beta"),
-        ("1.0.0-beta", "1.0.0-beta.11"),
-        ("1.0.0-beta.11", "1.0.0-rc.1"),
-        ("1.0.0-rc.1", "1.0.0"),
-        ("1.0.0", "1.0.1-beta.1"),
-        ("1.0.1-beta.1", "1.0.1-rc.6"),
-        ("1.0.1-rc.6", "1.0.1"),
-        ("1.0.1", "1.2.0"),
-        ("1.2.0", "2.0.0"),
-    ],
-)
-def test_gt(lhs, rhs):
-    assert compare(lhs, rhs) > 0
