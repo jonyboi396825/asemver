@@ -1,5 +1,5 @@
 """
-clean()
+clean(), clean_and_parse()
 """
 
 import pytest
