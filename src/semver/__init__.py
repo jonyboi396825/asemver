@@ -10,6 +10,12 @@ from .operations import bump as bump
 from .operations import clean as clean
 from .operations import clean_and_parse as clean_and_parse
 from .operations import compare as compare
+from .operations import get_build as get_build
+from .operations import get_major as get_major
+from .operations import get_minor as get_minor
+from .operations import get_patch as get_patch
+from .operations import get_pre as get_pre
+from .operations import get_pre_digit as get_pre_digit
 from .operations import sub as sub
 from .operations import update as update
 from .operations import valid as valid

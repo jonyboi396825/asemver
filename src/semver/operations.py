@@ -149,6 +149,90 @@ def compare(lhs: str, rhs: str) -> int:
         return 1
 
 
+def get_build(version: str) -> t.Optional[str]:
+    """Gets the build label from the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+
+    Returns:
+        t.Optional[str]: The build label, or None if it does not have one
+    """
+
+    v = parse_version(version)
+    return v.build
+
+
+def get_major(version: str) -> int:
+    """Gets the major version number from the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+
+    Returns:
+        int: The major version number
+    """
+
+    v = parse_version(version)
+    return v.major
+
+
+def get_minor(version: str) -> int:
+    """Gets the minor version number from the version string
+
+    Args:
+        version(str): A version string; must not include 'v' in beginning
+
+    Returns:
+        int: The minor version number
+    """
+
+    v = parse_version(version)
+    return v.minor
+
+
+def get_patch(version: str) -> int:
+    """Gets the patch version number from the version string
+
+    Args:
+        version(str): A version string; must not include 'v' in beginning
+
+    Returns:
+        int: The patch version number
+    """
+
+    v = parse_version(version)
+    return v.patch
+
+
+def get_pre(version: str) -> t.Optional[str]:
+    """Gets the pre-release label from the version string
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+
+    Returns:
+        t.Optional[str]: The pre-release label, or None if it does not have one
+    """
+
+    v = parse_version(version)
+    return v.pre
+
+
+def get_pre_digit(version: str) -> t.Optional[int]:
+    """Gets the number in the rightmost dot-separated identifier in the pre-release
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+
+    Returns:
+        t.Optional[str]: The pre-release digit, or None if it does not have one
+    """
+
+    v = parse_version(version)
+    return v.pre_digit
+
+
 def sub(version: str, *operations: t.Union[VPos, VRm]) -> str:
     """The Version - operator on a string representing a version
 
