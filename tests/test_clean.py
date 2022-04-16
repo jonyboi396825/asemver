@@ -1,10 +1,10 @@
-import pytest
-from semver.exc import ParseException
-from semver.operations import clean, clean_and_parse
-
 """
 clean()
 """
+
+import pytest
+from semver.exc import ParseException
+from semver.operations import clean, clean_and_parse
 
 
 @pytest.mark.parametrize(

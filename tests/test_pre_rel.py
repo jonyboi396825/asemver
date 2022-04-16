@@ -1,3 +1,7 @@
+"""
+Pre class
+"""
+
 import pytest
 import re
 from semver.components import Pre

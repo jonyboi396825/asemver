@@ -1,3 +1,7 @@
+"""
+Version class
+"""
+
 import pytest
 import re
 from semver.version import Version, VersionNumber, Pre, Build, parse_version

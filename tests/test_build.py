@@ -1,3 +1,7 @@
+"""
+Build class
+"""
+
 import re
 
 import pytest
