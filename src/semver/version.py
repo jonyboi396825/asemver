@@ -554,6 +554,6 @@ def parse_version(version: str) -> Version:
 
     # get versions from groups
     major, minor, patch, pre, build = parsed.groups()
-    major, minor, patch = int(major), int(minor), int(patch)
+    major, minor, patch = map(int, (major, minor, patch))
 
     return Version(major, minor, patch, pre, build)
