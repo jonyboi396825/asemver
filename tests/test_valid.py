@@ -1,9 +1,9 @@
-import pytest
-from semver.operations import valid
-
 """
 valid()
 """
+
+import pytest
+from semver.operations import valid
 
 
 @pytest.mark.parametrize(
