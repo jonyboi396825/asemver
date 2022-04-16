@@ -2,10 +2,11 @@
 Version operations on string objects
 """
 
+import re
 import typing as t
 
-from .constants import VPos, VRm
-from .version import parse_version
+from .constants import RE_FULL, VPos, VRm
+from .version import Version, parse_version
 
 
 def add(version: str, *operations: t.Union[VPos, str]) -> str:
@@ -26,6 +27,68 @@ def add(version: str, *operations: t.Union[VPos, str]) -> str:
         v + operation
 
     return str(v)
+
+
+def clean(version: str) -> str:
+    """Cleans version string by stripping whitespaces and \
+        removing 'v' or '=' characters at the beginning of the string.
+
+    Note that this does not check for errors in the cleaned up string. \
+    It is recommended to check that the string is valid using the valid() \
+    function.
+
+    Args:
+        version (str): Version string to clean up
+
+    Returns:
+        str: Cleaned up version string
+    """
+
+    version = version.strip()
+    version = re.sub(r"^[v=]+", r"", version)
+    return version
+
+
+def clean_and_parse(version: str) -> Version:
+    """Cleans version string by stripping whitespaces and \
+        removing 'v' or '=' characters at the beginning of the string, \
+        then parses the string into a Version class.
+
+    Args:
+        version (str): Version string to clean up and parse
+
+    Returns:
+        Version: parsed Version object of cleaned up string (if it is valid)
+    """
+
+    string = clean(version)
+    return parse_version(string)
+
+
+def compare(lhs: str, rhs: str) -> int:
+    """Compares lhs are rhs version strings
+
+    * If lhs == rhs (in terms of versioning), returns 0
+    * If lhs < rhs (in terms of versioning), returns -1
+    * If lhs > rhs (in terms of versioning), returns 1
+
+    Args:
+        lhs (str): A version string
+        rhs (str): A version string
+
+    Returns:
+        int: The result of the comparison
+    """
+
+    vlhs = parse_version(lhs)
+    vrhs = parse_version(rhs)
+
+    if vlhs == vrhs:
+        return 0
+    elif vlhs < vrhs:
+        return -1
+    else:
+        return 1
 
 
 def sub(version: str, *operations: t.Union[VPos, VRm]) -> str:
@@ -83,27 +146,16 @@ def update(version: str, *operations: t.Union[VPos, VRm, str]) -> str:
     return str(v)
 
 
-def compare(lhs: str, rhs: str) -> int:
-    """Compares lhs are rhs version strings
-
-    * If lhs == rhs (in terms of versioning), returns 0
-    * If lhs < rhs (in terms of versioning), returns -1
-    * If lhs > rhs (in terms of versioning), returns 1
+def valid(version: str) -> bool:
+    """If the given version string is a valid semantic version
 
     Args:
-        lhs (str): A version string
-        rhs (str): A version string
+        version (str): Any string
 
     Returns:
-        int: The result of the comparison
+        bool: If the string is a valid semantic version
     """
 
-    vlhs = parse_version(lhs)
-    vrhs = parse_version(rhs)
+    parsed = re.match(RE_FULL, version)
 
-    if vlhs == vrhs:
-        return 0
-    elif vlhs < vrhs:
-        return -1
-    else:
-        return 1
+    return parsed is not None
