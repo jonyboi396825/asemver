@@ -66,6 +66,8 @@ Used when incrementing or decrementing an invalid position of a Version object.
 part of {VPos.MAJOR, VPos.MINOR, VPos.PATCH, VPos.PRE}
 * In dec() of Version, used when the pos argument is not a VPos enum or not \
 part of {VPos.MAJOR, VPos.MINOR, VPos.PATCH, VPos.PRE}
+* In bump(), used when given position is not in {VPos.MAJOR, VPos.MINOR, \
+VPos.PATCH, VPos.PRE}
 """
 EXC_INVALID_POS = "Unrecognized version position: {}"
 
@@ -137,6 +139,7 @@ Used in Version when trying to decrement a pre-release that doesn't exist.
 
 * In inc() of Version, used when pos is VPos.PRE and _pre attribute is None
 * In dec() of Version, used when pos is VPos.PRE and _pre attribute is None
+* In bump(), used when pos is VPos.PRE and the given version has no pre-release label
 """
 EXC_PRE_NO_VALUE_2 = "Object has no pre-release label: {}"
 

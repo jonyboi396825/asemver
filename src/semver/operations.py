@@ -5,7 +5,8 @@ Version operations on string objects
 import re
 import typing as t
 
-from .constants import RE_FULL, VPos, VRm
+from .constants import EXC_INVALID_POS, EXC_PRE_NO_VALUE_2, RE_FULL, VPos, VRm
+from .exc import InvalidPositionException, NoValueException
 from .version import Version, parse_version
 
 
@@ -13,7 +14,7 @@ def add(version: str, *operations: t.Union[VPos, str]) -> str:
     """The Version + operator on a string representing a version
 
     Args:
-        version (str): A version string
+        version (str): A version string; must not include 'v' in beginning
         *operations (Union[VPos, str]): Operations to perform on \
         the version string; should be the same as the rhs of the + \
         operator
@@ -27,6 +28,63 @@ def add(version: str, *operations: t.Union[VPos, str]) -> str:
         v + operation
 
     return str(v)
+
+
+def bump(version: str, pos: VPos, amt: int = 1, carry: bool = True) -> str:
+    """Bumps version position given in pos by amt
+
+    Args:
+        version (str): A version string; must not include 'v' in beginning
+        pos (VPos): The position (MAJOR, MINOR, PATCH, PRE) to bump (Note that bumping \
+        PRE is more ineffecient.)
+        amt (int, optional): The amount to bump the position by. Defaults to 1.
+        carry (bool, optional): If bumping the position should reset the positions \
+        to the right of it (setting minor or patch version to 0, removing pre-release \
+        label). Note that calling bump(pos=VPos.PRE, carry=True) is the same as if \
+        carry is False. Defaults to True.
+
+    Returns:
+        str: A string representing the bumped version
+    """
+
+    ret = parse_version(version)
+
+    if pos == VPos.PRE:
+        if not ret.has_pre:
+            raise NoValueException(EXC_PRE_NO_VALUE_2.format(repr(ret)))
+
+        for _ in range(amt):
+            ret.inc(VPos.PRE)
+
+        return str(ret)
+
+    # order of positions
+    order = (VPos.MAJOR, VPos.MINOR, VPos.PATCH, VPos.PRE)
+
+    # increment pos by amount
+    if pos == VPos.MAJOR:
+        ret.major += amt
+    elif pos == VPos.MINOR:
+        ret.minor += amt
+    elif pos == VPos.PATCH:
+        ret.patch += amt
+    else:
+        raise InvalidPositionException(EXC_INVALID_POS.format(pos))
+
+    if not carry:
+        return str(ret)
+
+    # reset positions to right if carry is True
+    ind = order.index(pos)
+    for i in order[ind + 1 :]:
+        if i == VPos.MINOR:
+            ret.minor = 0
+        elif i == VPos.PATCH:
+            ret.patch = 0
+        else:
+            ret.pre = None
+
+    return str(ret)
 
 
 def clean(version: str) -> str:
@@ -73,8 +131,8 @@ def compare(lhs: str, rhs: str) -> int:
     * If lhs > rhs (in terms of versioning), returns 1
 
     Args:
-        lhs (str): A version string
-        rhs (str): A version string
+        lhs (str): A version string; must not include 'v' in beginning
+        rhs (str): A version string; must not include 'v' in beginning
 
     Returns:
         int: The result of the comparison
@@ -95,7 +153,7 @@ def sub(version: str, *operations: t.Union[VPos, VRm]) -> str:
     """The Version - operator on a string representing a version
 
     Args:
-        version (str): A version string
+        version (str): A version string; must not include 'v' in beginning
         *operations (Union[VPos, str]): Operations to perform on \
         the version string; should be the same as the rhs of the - \
         operator
@@ -124,7 +182,7 @@ def update(version: str, *operations: t.Union[VPos, VRm, str]) -> str:
     Decrementing a release number is not supported.
 
     Args:
-        version (str): A version string
+        version (str): A version string; must not include 'v' in beginning
         *operations(Union[VPos, VRm, str]): The series of operations to perform on \
         the version string, from left to right. If VPos or str, should be equivalent \
         to the rhs of the + operator. If VRm, should be equivalent to the rhs of the \
