@@ -119,9 +119,6 @@ class Version(Core):
             elif lhs is not None and rhs is None:
                 # if rhs does not have a pre-release (and lhs does), then lhs < rhs
                 return True
-            elif isinstance(lhs, VersionNumber) and isinstance(rhs, Pre):
-                # ints < strs
-                return True
             else:
                 return bool(lhs < rhs)
 

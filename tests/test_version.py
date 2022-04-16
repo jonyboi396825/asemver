@@ -247,6 +247,7 @@ class TestProperties:
             (Version(0, 0, 0, "a0"), True),
             (Version(0, 0, 0, "ab"), False),
             (Version(0, 0, 0, "ab2"), False),
+            (Version(0, 1, 0), False),
         ],
     )
     def test_is_alpha(self, v, true):
@@ -266,6 +267,7 @@ class TestProperties:
             (Version(0, 0, 0, "b24"), True),
             (Version(0, 0, 0, "betab"), False),
             (Version(0, 0, 0, "bb8"), False),
+            (Version(0, 0, 1), False),
         ],
     )
     def test_is_beta(self, v, true):
@@ -284,6 +286,7 @@ class TestProperties:
             (Version(0, 0, 0, "rc"), True),
             (Version(0, 0, 0, "rc6.2"), True),
             (Version(0, 0, 0, "rcd"), False),
+            (Version(0, 1, 1), False),
         ],
     )
     def test_is_rc(self, v, true):
@@ -535,6 +538,12 @@ def test_bad_inc_dec_pos(bad):
     ):
         v.inc(bad)
 
+    with pytest.raises(
+        InvalidPositionException,
+        match=re.escape("Unrecognized version position: {}".format(bad)),
+    ):
+        v.dec(bad)
+
 
 class TestInc:
     def test_major(self):
@@ -604,6 +613,16 @@ class TestInc:
         assert v.pre == "beta.6"
         assert v.build == "meta"
 
+    def test_default_is_pre(self):
+        v = Version(2, 5, 3, pre="beta.5", build="meta")
+        v.inc()
+
+        assert v.major == 2
+        assert v.minor == 5
+        assert v.patch == 3
+        assert v.pre == "beta.6"
+        assert v.build == "meta"
+
 
 class TestDec:
     def test_major(self):
@@ -666,6 +685,16 @@ class TestDec:
     def test_pre(self):
         v = Version(2, 5, 3, pre="beta.5", build="meta")
         v.dec(VPos.PRE)
+
+        assert v.major == 2
+        assert v.minor == 5
+        assert v.patch == 3
+        assert v.pre == "beta.4"
+        assert v.build == "meta"
+
+    def test_default_is_pre(self):
+        v = Version(2, 5, 3, pre="beta.5", build="meta")
+        v.dec()
 
         assert v.major == 2
         assert v.minor == 5
