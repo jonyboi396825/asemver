@@ -84,7 +84,7 @@ class Version(Core):
             VPos.PATCH: self._patch,
             VPos.PRE: None,
         }
-        self._id_order = [VPos.MAJOR, VPos.MINOR, VPos.PATCH]
+        self._id_order = (VPos.MAJOR, VPos.MINOR, VPos.PATCH)
 
     def __repr__(self) -> str:
         """repr of Version"""
