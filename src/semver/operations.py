@@ -20,7 +20,7 @@ def add(version: str, *operations: t.Union[VPos, str]) -> str:
         operator
 
     Returns:
-        str: The version string after adding args from *operations
+        str: The version string after adding args from operations args
     """
 
     v = parse_version(version)
@@ -325,7 +325,7 @@ def sub(version: str, *operations: t.Union[VPos, VRm]) -> str:
         operator
 
     Returns:
-        str: The version string after subtracting args from *operations
+        str: The version string after subtracting args from operations args
     """
 
     v = parse_version(version)
