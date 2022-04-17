@@ -1,3 +1,6 @@
+# for package
+click>=8.1.2
+
 # for development
 mypy>=0.942
 black>=22.1.0
