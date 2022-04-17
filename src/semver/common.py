@@ -6,7 +6,7 @@ import abc
 import typing as t
 
 
-class Base(abc.ABC):
+class Base(abc.ABC):  # pragma: no cover
     """
     Abstract base class with common methods that need to be implemented.
     """
