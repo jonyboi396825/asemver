@@ -4,9 +4,9 @@
 
 ## To do:
 
-### 0.2.0
+### 0.2.1
 
-- CLI (0.2.x)
+- Fix mypy errors
 
 ### Future releases:
 
@@ -19,3 +19,4 @@
 - Version class (0.0.x)
 - 0.0.1 fixes (issues #1, #2, #3, #4, #6)
 - 0.1.0 helper functions (`operations.py` file in src)
+- CLI (0.2.x)
