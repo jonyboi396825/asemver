@@ -4,14 +4,13 @@
 
 ## To do:
 
-### 0.3.0
+### 0.4.0
 
-- documentation
+- setup GitHub (actions, contributing.md, code of conduct, issue templates, etc), and discover any remaining bugs (0.4.x)
 
 ### Future releases:
 
-- setup GitHub (actions, contributing.md, code of conduct, security, deploy sphinx docs, etc), and discover any remaining bugs (0.4.x)
-- final release (1.x)
+- final release (update README) (1.x)
 
 ## Done:
 
@@ -20,3 +19,4 @@
 - 0.1.0 helper functions (`operations.py` file in src)
 - 0.2.0 CLI
 - 0.2.1 Fix mypy errors
+- 0.3.0 documentation
