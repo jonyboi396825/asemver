@@ -54,6 +54,10 @@ from semver.operations import valid
         ),
         "1.1.1   ",
         "",
+        5,
+        object,
+        3 + 2j,
+        5.2,
     ],
 )
 def test_invalid(bad):
