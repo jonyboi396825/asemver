@@ -27,4 +27,4 @@ from .operations import valid as valid
 from .version import Version as Version
 from .version import parse_version as parse_version
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
