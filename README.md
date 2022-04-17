@@ -1,22 +1,22 @@
 # A Python implementation of semantic versioning
 
-**Project in development**
+This is an implementation of semantic versioning in Python. 
+This will not be a standalone package on PyPI because there is 
+already [another implementation](https://pypi.org/project/semver/)
+of semantic versioning.
 
-## To do:
+If anything, this package will only be used as a component of
+a bigger project in a git submodule or installed using git.
 
-### 0.4.0
+## Quick example
 
-- setup GitHub (actions, contributing.md, code of conduct, issue templates, etc), and discover any remaining bugs (0.4.x)
+```py
+from semver import parse_version
+version = parse_version("2.5.1-alpha.41+meta293")
 
-### Future releases:
+print(str(version))
+# '2.5.1-alpha.41+meta293'
 
-- final release (update README) (1.x)
-
-## Done:
-
-- 0.0.0 Version class
-- 0.0.1 fixes (issues #1, #2, #3, #4, #6)
-- 0.1.0 helper functions (`operations.py` file in src)
-- 0.2.0 CLI
-- 0.2.1 Fix mypy errors
-- 0.3.0 documentation
+print(repr(version))
+# "Version(major=2, minor=5, patch=1, pre=Pre(string='alpha.41'), build=Build(string='meta293'))"
+```
