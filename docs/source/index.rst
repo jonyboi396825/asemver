@@ -1,6 +1,8 @@
 Welcome to asemver's documentation!
 ===================================
 
+Current release: |release|
+
 This is an implementation of semantic versioning in Python. 
 This will not be a standalone package on PyPI because there is 
 already `another implementation <https://pypi.org/project/semver/>`_ 
