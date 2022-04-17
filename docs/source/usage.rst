@@ -9,6 +9,11 @@ semantic versions, and a CLI.
 Version class
 -------------
 
+This usage guide will show how to use the common version object operations.
+
+``+``, ``-`` operators
+~~~~~~~~~~~~~~~~~~~~~~
+
 To make a version class, use the ``parse_version()`` function:
 
 .. code-block:: py
@@ -169,6 +174,48 @@ These operators can be chained together. Chains are evaluated from left to right
     version - VRm.PRE - VRm.BUILD
     print(str(version))
     # 12.1.1
+
+Comparison operators
+~~~~~~~~~~~~~~~~~~~~
+
+Comparisons are based on SemVer `spec item 11 <https://semver.org/#spec-item-11>`_.
+
+Comparison operators (``>``, ``>=``, ``<``, ``<=``, ``!=``, ``==``) are supported
+on all version objects. Note that build labels are ignored when comparing.
+
+.. code-block:: py
+
+    from semver import parse_version
+
+    lhs = parse_version("0.2.0-pre.2+build12")
+    rhs = parse_version("0.2.0-pre.2+build25")
+    print(lhs == rhs)  # True
+    print(lhs <= rhs)  # True
+    print(lhs >= rhs)  # True
+    print(lhs != rhs)  # False
+    print(lhs < rhs)  # False
+    print(lhs > rhs)  # False
+
+    lhs = parse_version("0.4.0-pre.2+build12")
+    rhs = parse_version("0.4.0")
+    print(lhs == rhs)  # False
+    print(lhs <= rhs)  # True
+    print(lhs >= rhs)  # False
+    print(lhs != rhs)  # True
+    print(lhs < rhs)  # True
+    print(lhs > rhs)  # False
+
+    lhs = parse_version("5.3.1")
+    rhs = parse_version("2.9.9")
+    print(lhs == rhs)  # False
+    print(lhs <= rhs)  # False
+    print(lhs >= rhs)  # True
+    print(lhs != rhs)  # True
+    print(lhs < rhs)  # False
+    print(lhs > rhs)  # True
+
+More information
+~~~~~~~~~~~~~~~~
 
 More information on the ``Version`` class can be found in the
 :doc:`API reference <../semver>`.

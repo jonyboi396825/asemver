@@ -44,6 +44,6 @@ semver.version module
 
    .. autoclass:: semver.version.Version
       :members:
-      :special-members: __add__, __sub__
+      :special-members: __add__, __sub__, __lt__, __eq__
       :undoc-members:
       :show-inheritance:
