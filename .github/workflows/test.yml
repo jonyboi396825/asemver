@@ -2,6 +2,14 @@ name: Tests
 on:
   workflow_dispatch:
 
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '*.rst'
+
 jobs:
   tests:
     name: All tests
