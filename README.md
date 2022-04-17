@@ -18,3 +18,4 @@
 
 - Version class (0.0.x)
 - 0.0.1 fixes (issues #1, #2, #3, #4, #6)
+- 0.1.0 helper functions (`operations.py` file in src)
