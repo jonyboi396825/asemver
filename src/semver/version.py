@@ -184,10 +184,10 @@ class Version(Core):
     def __sub__(self, other: t.Any) -> Version:
         """Multi-use operator to subtract/remove things
 
-        * If added to a VPos enum, decrements version at that position \
+        * If subtracted by a VPos enum, decrements version at that position \
         (including pre-release versions, if they exist), only if their \
         version number is not 0.
-        * If added to a VRm enum, removes the label indicated by the enum \
+        * If subtracted by a VRm enum, removes the label indicated by the enum \
         only if the label exists. Otherwise, raises an exception.
         * If operator is used for anything else, raises an exception.
         """
