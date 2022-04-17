@@ -152,7 +152,7 @@ def print_version(
         click.echo(json_obj)
     elif format == "csv":
         writer = csv.writer(sys.stdout)
-        to_write: t.List[str] = []
+        to_write: t.List[t.Union[int, str, None]] = []
 
         # fill list with non-excluded keys. Excluded keys are filled with None
         for excluded, to_print in zip(exclude_list, to_print_list):
