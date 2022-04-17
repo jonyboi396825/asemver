@@ -1,3 +1,5 @@
+from semver import __version__
+
 # -- Project information -----------------------------------------------------
 
 project = "asemver"
@@ -5,7 +7,7 @@ copyright = "2022, Jonathan Liu"
 author = "Jonathan Liu"
 
 # The full version, including alpha/beta/rc tags
-release = "0.3.0"
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
