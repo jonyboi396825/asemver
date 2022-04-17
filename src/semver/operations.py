@@ -380,6 +380,9 @@ def valid(version: str) -> bool:
         bool: If the string is a valid semantic version
     """
 
+    if not isinstance(version, str):
+        return False
+
     parsed = re.match(RE_FULL, version)
 
     return parsed is not None
