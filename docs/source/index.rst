@@ -23,13 +23,8 @@ This package can be installed using pip and git:
    
    $ pip install git+https://github.com/jonyboi396825/asemver@<version>
 
-Replace ``<version>`` with |version| to install the latest stable version.
-To install the latest commit that could include breaking builds:
-
-.. code-block:: text
-   
-   $ pip install git+https://github.com/jonyboi396825/asemver
-
+Replace ``<version>`` with |version| to install the latest stable version,
+or with an earlier release number to install an earlier version.
 See the `pip documentation <https://pip.pypa.io/en/stable/topics/vcs-support/>`_
 for more info.
 
