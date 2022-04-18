@@ -21,8 +21,17 @@ This package can be installed using pip and git:
 
 .. code-block:: text
    
+   $ pip install git+https://github.com/jonyboi396825/asemver@<version>
+
+Replace ``<version>`` with |version| to install the latest stable version.
+To install the latest commit that could include breaking builds:
+
+.. code-block:: text
+   
    $ pip install git+https://github.com/jonyboi396825/asemver
 
+See the `pip documentation <https://pip.pypa.io/en/stable/topics/vcs-support/>`_
+for more info.
 
 The dependencies are:
 
@@ -31,6 +40,8 @@ The dependencies are:
 * Click: For the CLI
 
 The source code can be found `here <https://github.com/jonyboi396825/asemver>`_.
+The package can also be installed by cloning the source code or adding it
+as a submodule.
 
 Contents
 --------
